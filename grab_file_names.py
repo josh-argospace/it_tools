@@ -20,7 +20,7 @@ def list_files_with_extension(folder, ext):
         return []
 
 def write_file_list(folder, ext, output):
-    """Writes the list of files with the given extension to a CSV file."""
+    """Writes the list of files with the given extension to a CSV file with additional empty columns."""
     files = list_files_with_extension(folder, ext)
     
     if not files:
@@ -30,11 +30,12 @@ def write_file_list(folder, ext, output):
     try:
         with open(output, "w", newline="") as f:
             writer = csv.writer(f)
-            writer.writerow(["Filename", "Sheet"])  # CSV header
+            # Write the header with the requested columns
+            writer.writerow(["Filename", "Sheet Name", "Entry Status", "Review Status", "Notes"])
             
             for file in files:
-                filename_no_ext = os.path.splitext(file)[0]  # Remove extension
-                writer.writerow([file, filename_no_ext])
+                sheet_name = os.path.splitext(file)[0]  # Remove extension
+                writer.writerow([file, sheet_name, "", "", ""])  # Empty columns for Entry Status, Review Status, and Notes
         
         print(f"File list written to: {output}")
     except Exception as e:
