@@ -1,11 +1,11 @@
 import os
 
 # Set the folder path and file extension
-folder_path = "path/to/your/folder"  # Change this to your target folder
-extension = ".txt"  # Change this to the desired file extension
+folder_path = "C:\Users\Public\Documents\Altium\Navigator System Controller"  # Change this to your target folder
+extension = ".SchDoc"  # Change this to the desired file extension
 
 # Output file
-output_file = "file_list.txt"
+output_file = "sch_name_list"
 
 def list_files_with_extension(folder, ext):
     """Returns a list of files in the folder that end with the given extension."""
