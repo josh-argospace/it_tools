@@ -1,25 +1,44 @@
 import os
+import csv
 
 # Set the folder path and file extension
-folder_path = "C:\Users\Public\Documents\Altium\Navigator System Controller"  # Change this to your target folder
+folder_path = r"C:\Users\Public\Documents\Altium\Navigator System Controller"  # Use raw string
 extension = ".SchDoc"  # Change this to the desired file extension
 
-# Output file
-output_file = "sch_name_list"
+# Output file (writes to the same directory as the schematic files)
+output_file = os.path.join(folder_path, "sch_name_list.csv")
 
 def list_files_with_extension(folder, ext):
     """Returns a list of files in the folder that end with the given extension."""
-    return [f for f in os.listdir(folder) if f.endswith(ext)]
+    try:
+        return [f for f in os.listdir(folder) if f.endswith(ext)]
+    except FileNotFoundError:
+        print(f"Error: Folder '{folder}' not found.")
+        return []
+    except PermissionError:
+        print(f"Error: Permission denied for folder '{folder}'.")
+        return []
 
 def write_file_list(folder, ext, output):
-    """Writes the list of files with the given extension to an output file."""
+    """Writes the list of files with the given extension to a CSV file."""
     files = list_files_with_extension(folder, ext)
     
-    with open(output, "w") as f:
-        for file in files:
-            f.write(file + "\n")
+    if not files:
+        print("No matching files found.")
+        return
     
-    print(f"File list written to {output}")
+    try:
+        with open(output, "w", newline="") as f:
+            writer = csv.writer(f)
+            writer.writerow(["Filename", "Sheet"])  # CSV header
+            
+            for file in files:
+                filename_no_ext = os.path.splitext(file)[0]  # Remove extension
+                writer.writerow([file, filename_no_ext])
+        
+        print(f"File list written to: {output}")
+    except Exception as e:
+        print(f"Error writing to file: {e}")
 
 # Run the function
 write_file_list(folder_path, extension, output_file)
